@@ -1,56 +1,51 @@
-function getCompChoice(){
-    let rand = Math.floor(Math.random() * 3);
-    let choice;
-    if(rand==1)choice="Rock";
-    if(rand==2)choice="Paper";
-    if(rand==0)choice="Scissors";
-    choice = choice.toUpperCase();
-    console.log(`Computer\'s choice: ${choice}`);
-    return choice;
-}
-
-function getPlayerChoice(){
-    let choice = prompt("Choose: ");
-    choice = choice.toUpperCase();
-    console.log(`Player\'s choise: ${choice}`);
-    return choice;
-}
+const btn = document.querySelectorAll("button")
+const output = document.querySelector(".output");
+output.setAttribute('style', 'background-color: white');
 
 let player_score=0;
 let comp_score=0;
+let choices = ["scissors", "rock", "paper"];
+let round=0;
+btn.forEach(b => {
+    b.addEventListener('click', e => {
 
-function game(){
-    let a=1;
-    const player = getPlayerChoice();
-    const comp = getCompChoice();
-    if(player==comp){
-        console.log(`It\'s a draw!! Both of you chose ${player}`);
-        a=-1;
-        player_score++;
-        comp_score++;
-    }
+        if(round==5){
+            if(player_score>comp_score)console.log("You win!!");
+            else if(player_score==comp_score)console.log("It\'s a draw!!");
+            else console.log("You lose!!");
+        }
 
-    else if(player=="ROCK" && comp=="PAPER")a=0;
-    else if(player=="PAPER" && comp=="SCISSORS")a=0;
-    else if(player=="SCISSORS" && comp=="ROCK")a=0;
+        else{
+            const pc = choices.indexOf(e.target.className);
+            const cc = Math.floor(Math.random() * 3);
 
-    if(a==1){
-        console.log(`You win!! ${player} beats ${comp}`);
-        player_score++;
-    }
-    else if(a==0){
-        console.log(`You lose!! ${comp} beats ${player}`);
-        comp_score++;
-    }
-}
+            console.log(`You chose ${choices[pc]}`);
+            console.log(`Computer chose ${choices[cc]}`);
 
-let n = prompt("How many rounds do you want: ");
+            if(pc==cc){
+                const txt = document.createElement("p");
+                txt.innerText = `It\'s a draw!! Both of you chose ${choices[pc]}\n`;
+                output.append(txt);
+                player_score++;
+                comp_score++;
+            }
+            else if((pc==1 && cc==0) || (pc==2 && cc==1) || (pc==0 && cc==2)){
+                const txt = document.createElement("p");
+                txt.innerText = `You win!! ${choices[pc]} beats ${choices[cc]}\n`;
+                output.append(txt);
+                player_score++;
+            }
+            else{
+                const txt = document.createElement("p");
+                txt.innerText = `You lose!! ${choices[cc]} beats ${choices[pc]}\n`;
+                output.append(txt);
+                comp_score++;
+            }
+            const txt = document.createElement("p");
+            txt.innerText = `Your score: ${player_score}   Computer\'s score: ${comp_score}\n`;
+            output.append(txt);
+            round++;
+        }
+    })
+})
 
-for (let index = 0; index < n; index++) {
-    game();
-    console.log(`Your score: ${player_score}   Computer\'s score: ${comp_score}`);
-}
-
-if(player_score>comp_score)console.log("You win!!");
-else if(player_score==comp_score)console.log("It\'s a draw!!");
-else console.log("You lose!!");
